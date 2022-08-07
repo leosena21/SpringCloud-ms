@@ -16,4 +16,11 @@ public class PaymentService {
         Worker worker = workerFeignClient.findById(workerId).getBody();
         return new Payment(worker.getName(), worker.getDailyIncome(), days);
     }
+    public Payment getPaymentFallback(long workerId, int days, String error){
+        return Payment.builder()
+                .name("Fallback-error workerId: " + workerId + " " + error)
+                .dailyIncome(0.0)
+                .days(days)
+                .build();
+    }
 }
