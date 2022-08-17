@@ -31,7 +31,7 @@ public class WorkerService {
     public Worker findById(Long id) {
         log.error("PORT = " + env.getProperty("local.server.port"));
         return repository.findById(id)
-                .orElseThrow( () -> new EntityNotFoundException("Deu ruim"));
+                .orElseThrow( () -> new EntityNotFoundException("Worker " + id + " não encontrado"));
     }
 
     public List<Worker> findAll() {
