@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: hr-api-gateway-zuul
+  cloud:
+    gateway:
+      routes:
+        - id: hr-worker
+          uri: lb://hr-worker
+          predicates:
+            - Path=/HR-WORKER/**
+          filters:
+            - RewritePath=/hr-worker(?<segment>/?.*), /${segment}
+        - id: hr-payroll
+          uri: lb://HR-PAYROLL
+          predicates:
+            - Path=/hr-payroll/**
+          filters:
+            - RewritePath=/hr-payroll(?<segment>/?.*), /${segment}
+        - id: hr-user
+          uri: lb://HR-USER/
+          predicates:
+            - Path=/hr-user/**
+          filters:
+            - RewritePath=/hr-user(?<segment>/?.*), /${segment}
+        - id: /hr-oauth
+          uri: lb://HR-OAUTH/
+          predicates:
+            - Path=/hr-oauth/**
+          filters:
+            - RewritePath=/hr-oauth(?<segment>/?.*), /${segment}
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 30s
+
+server:
+  port: 8765
+
+eureka:
+  client:
+    service-url:
+      defaltZone: http://localhost:8761/eureka
+
