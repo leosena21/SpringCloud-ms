@@ -28,6 +28,7 @@ spring:
             - Path=/hr-oauth/**
           filters:
             - RewritePath=/hr-oauth(?<segment>/?.*), /${segment}
+
       httpclient:
         connect-timeout: 5000
         response-timeout: 30s

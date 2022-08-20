@@ -4,7 +4,6 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +14,14 @@ public class Role implements Serializable {
 
     private Long id;
     private String roleName;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
 
     @Override
     public boolean equals(Object o) {

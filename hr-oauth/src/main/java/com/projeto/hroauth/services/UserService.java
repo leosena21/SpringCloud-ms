@@ -1,21 +1,27 @@
 package com.projeto.hroauth.services;
 
-import com.projeto.hroauth.entities.User;
 import com.projeto.hroauth.feign.UserFeign;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserFeign userFeign;
 
-    public User findByEmail(String email){
-        log.info(String.format("Email recebido: %s", email));
-        return userFeign.findByEmail(email).getBody();
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        try{
+            return userFeign.findByEmail(username).getBody();
+        }
+        catch (Exception e){
+            throw new UsernameNotFoundException("Email not found");
+        }
+
     }
 }
