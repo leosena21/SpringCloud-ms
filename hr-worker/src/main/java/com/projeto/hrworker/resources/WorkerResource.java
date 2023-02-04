@@ -29,11 +29,6 @@ public class WorkerResource {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @GetMapping("/config")
-    public ResponseEntity<String> findConfig(){
-        return ResponseEntity.ok(service.findConfig());
-    }
-
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody @Valid WorkerNewInput workerDto){
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(

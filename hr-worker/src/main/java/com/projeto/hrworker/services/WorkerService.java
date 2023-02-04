@@ -5,7 +5,6 @@ import com.projeto.hrworker.entities.Worker;
 import com.projeto.hrworker.repositories.WorkerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,6 @@ import java.util.List;
 @Service
 @RefreshScope
 public class WorkerService {
-
-    @Value("${test.config}")
-    private String testConfig;
 
     @Autowired
     private Environment env;
@@ -45,9 +41,5 @@ public class WorkerService {
                         .name(workerDto.getName())
                         .dailyIncome(workerDto.getDailyIncome())
                 .build());
-    }
-
-    public String findConfig() {
-        return testConfig;
     }
 }
