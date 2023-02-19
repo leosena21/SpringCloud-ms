@@ -1,6 +1,5 @@
-package com.projeto.hruser.config;
+package com.projeto.hrworker.config;
 
-import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -19,7 +18,7 @@ public class SwaggerConfig {
     public Docket swagger() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.projeto.hruser"))
+                .apis(RequestHandlerSelectors.basePackage("com.projeto.hrworker"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(metaInfo());
@@ -31,7 +30,7 @@ public class SwaggerConfig {
         @SuppressWarnings("rawtypes")
         ApiInfo apiInfo = new ApiInfo(
                 "API REST hr-user",
-                "API REST hr-user",
+                "API REST hr-worker",
                 "1.0",
                 "Terms of Service",
                 new Contact("Leonardo", "https://github.com/leosena21/",
