@@ -1,26 +1,36 @@
 package com.projeto.hruser.resources;
 
 import com.projeto.hruser.entities.User;
-import com.projeto.hruser.services.UserService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@AllArgsConstructor
-@RestController
-@RequestMapping(value = "/user")
-public class UserResource {
+public interface UserResource {
 
-    private UserService service;
+    @ApiOperation(
+            value = "Busca um usuario a partir do email informado",
+            notes = "Retorna 404 caso não encontre o email cadastrado",
+            httpMethod = "GET",
+            response = User.class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Usuario encontrado com sucesso"),
+            @ApiResponse(code = 404, message = "Usuario não encontrado")
+    })
+    ResponseEntity<User> findByEmail(@RequestParam String email);
 
-    @GetMapping("/search")
-    public ResponseEntity<User> findByEmail(@RequestParam String email){
-        return ResponseEntity.ok(service.findByEmail(email));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id){
-        return ResponseEntity.ok(service.findById(id));
-    }
+    @ApiOperation(
+            value = "Busca um usuario a partir do id informado",
+            notes = "Retorna 404 caso não encontre o id cadastrado",
+            httpMethod = "GET",
+            response = User.class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Usuario encontrado com sucesso"),
+            @ApiResponse(code = 404, message = "Usuario não encontrado")
+    })
+    ResponseEntity<User> findById(@PathVariable Long id);
 }

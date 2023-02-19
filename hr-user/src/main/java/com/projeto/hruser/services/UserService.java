@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
-public class UserService {
+public class UserService{
 
     private UserRepository repository;
 
@@ -17,7 +17,7 @@ public class UserService {
                 .orElseThrow( () -> new ObjectNotFoundException("User id:" + id + " não encontrado"));
     }
 
-    public User findByEmail(String email){
+    public User findByEmail(String email) {
         return repository.findByEmail(email).orElseThrow(() -> new ObjectNotFoundException(String.format("Email %s não encontrado", email)));
     }
 }
