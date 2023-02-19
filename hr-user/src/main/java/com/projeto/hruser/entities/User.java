@@ -1,6 +1,7 @@
 package com.projeto.hruser.entities;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "tb_user")
 public class User implements Serializable {
@@ -22,16 +24,12 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Necessário informar o nome do usuário")
     private String name;
-
-    @NotBlank(message = "Necessário informar o email do usuário")
     @Column(unique = true)
     private String email;
-
-    @NotBlank(message = "Necessário informar a senha do usuário")
     private String password;
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "tb_user_role",
@@ -39,4 +37,8 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    public void addRole(Role role){
+        roles.add(role);
+    }
 }

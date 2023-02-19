@@ -1,11 +1,13 @@
 package com.projeto.hruser.resources;
 
+import com.projeto.hruser.dto.UserNewInputDTO;
 import com.projeto.hruser.entities.User;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public interface UserResource {
@@ -33,4 +35,14 @@ public interface UserResource {
             @ApiResponse(code = 404, message = "Usuario não encontrado")
     })
     ResponseEntity<User> findById(@PathVariable Long id);
+
+    @ApiOperation(
+            value = "Insere um usuário",
+            httpMethod = "POST",
+            response = User.class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Usuario cadastrado com sucesso"),
+    })
+    ResponseEntity<Void> insert(@RequestBody UserNewInputDTO userDTO);
 }
