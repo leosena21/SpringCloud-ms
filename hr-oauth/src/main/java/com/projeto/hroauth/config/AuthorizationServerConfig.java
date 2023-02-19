@@ -1,6 +1,9 @@
 package com.projeto.hroauth.config;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,19 +17,19 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
 @EnableAuthorizationServer
+@RequiredArgsConstructor
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtAccessTokenConverter accessTokenConverter;
+    private final JwtTokenStore tokenStore;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtAccessTokenConverter accessTokenConverter;
+    @Value("${oauth.client.name}")
+    private String client_name;
 
-    @Autowired
-    private JwtTokenStore tokenStore;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    @Value("${oauth.client.secret}")
+    private String client_secret;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
@@ -36,8 +39,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("app_client_id")
-                .secret(passwordEncoder.encode("app_secret"))
+                .withClient(client_name)
+                .secret(passwordEncoder.encode(client_secret))
                 .scopes("read", "write")
                 .authorizedGrantTypes("password")
                 .accessTokenValiditySeconds(86400);
