@@ -1,15 +1,18 @@
 package com.projeto.hruser.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tb_user")
 public class User implements Serializable {
@@ -19,14 +22,14 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
+    @NotBlank(message = "Necessário informar o nome do usuário")
     private String name;
 
-    @NonNull
+    @NotBlank(message = "Necessário informar o email do usuário")
     @Column(unique = true)
     private String email;
 
-    @NonNull
+    @NotBlank(message = "Necessário informar a senha do usuário")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)

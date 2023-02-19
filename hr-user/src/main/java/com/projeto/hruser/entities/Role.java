@@ -3,6 +3,7 @@ package com.projeto.hruser.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Data
@@ -17,5 +18,7 @@ public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Necessário informar o nome da role")
     private String roleName;
 }
