@@ -19,9 +19,6 @@ public interface WorkerResource {
             httpMethod = "GET",
             response = Worker.class
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Consulta realizada com sucesso. Pode não retornar workers"),
-    })
     ResponseEntity<List<Worker>> findAll();
 
     @ApiOperation(
@@ -30,10 +27,6 @@ public interface WorkerResource {
             httpMethod = "GET",
             response = Worker.class
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Worker encontrado com sucesso"),
-            @ApiResponse(code = 404, message = "Worker não encontrado")
-    })
     ResponseEntity<Worker> findById(@PathVariable Long id);
 
     @ApiOperation(
@@ -41,8 +34,5 @@ public interface WorkerResource {
             httpMethod = "POST",
             response = Worker.class
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Worker inserido com sucesso"),
-    })
     ResponseEntity<Void> insert(@RequestBody @Valid WorkerNewInput workerDto);
 }
