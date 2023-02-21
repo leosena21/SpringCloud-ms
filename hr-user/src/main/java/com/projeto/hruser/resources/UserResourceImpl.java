@@ -3,11 +3,7 @@ package com.projeto.hruser.resources;
 import com.projeto.hruser.dto.UserNewInputDTO;
 import com.projeto.hruser.entities.User;
 import com.projeto.hruser.services.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import lombok.AllArgsConstructor;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +15,7 @@ import java.net.URI;
 @RestController
 @RequestMapping(value = "/user")
 @RequiredArgsConstructor
-@Api(value = "User Resource")
+@Tag(name = "User Resource")
 public class UserResourceImpl implements UserResource{
 
     private final UserService service;
