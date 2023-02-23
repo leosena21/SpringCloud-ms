@@ -2,7 +2,7 @@ package com.projeto.hrworker.resources;
 
 import com.projeto.hrworker.dto.WorkerNewInput;
 import com.projeto.hrworker.entities.Worker;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
@@ -14,24 +14,24 @@ import java.util.List;
 
 public interface WorkerResource {
 
-    @ApiOperation(
-            value = "Busca todos os workers",
-            httpMethod = "GET",
+    @Operation(
+        summary = "Busca todos os workers",
+        method = "GET"
             response = Worker.class
     )
     ResponseEntity<List<Worker>> findAll();
 
-    @ApiOperation(
-            value = "Busca worker a partid do id",
-            notes = "Retorna 404 caso exista workers",
+    @Operation(
+            summary = "Busca worker a partid do id",
+            method = "GET"
             httpMethod = "GET",
             response = Worker.class
     )
     ResponseEntity<Worker> findById(@PathVariable Long id);
 
-    @ApiOperation(
-            value = "Insere worker",
-            httpMethod = "POST",
+    @Operation(
+        summary = "Insere worker",
+        method = "POST"
             response = Worker.class
     )
     ResponseEntity<Void> insert(@RequestBody @Valid WorkerNewInput workerDto);
