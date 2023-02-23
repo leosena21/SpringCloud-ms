@@ -7,7 +7,7 @@
         <syslogHost>logs4.papertrailapp.com</syslogHost>
         <port>24658</port>
         <facility>USER</facility>
-        <suffixPattern>HR-USER: %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){Magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_Word:-%wEx}}</suffixPattern>
+        <suffixPattern>HR-WORKER: %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){Magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_Word:-%wEx}}</suffixPattern>
     </appender>
     <appender name="STDOUT"
               class="ch.qos.logback.core.ConsoleAppender">
