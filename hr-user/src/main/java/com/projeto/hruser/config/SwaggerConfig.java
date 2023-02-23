@@ -1,69 +1,105 @@
 package com.projeto.hruser.config;
 
+import io.swagger.v3.oas.models.ExternalDocumentation;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.responses.ApiResponses;
+import org.apache.commons.lang.StringUtils;
+import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.builders.ResponseBuilder;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.Response;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Objects;
 
 @Configuration
 public class SwaggerConfig {
 
-    private final Response m200 = getResponse("200", "Operação realizada com sucesso");
-    private final Response m201 = getResponse("201", "Recurso criado com sucesso");
-    private final Response m204 = getResponse("204", "Operação realizada com sucesso, mas não há body");
+    private final String m200 = "Operação realizada com sucesso";
+    private final String m201 = "Recurso criado com sucesso";
+    private final String m204 = "Operação realizada com sucesso, mas não há body";
 
-    private final Response m400 = getResponse("400", "Operação inválida");
-    private final Response m401 = getResponse("401", "Acesso não autorizado");
-    private final Response m404 = getResponse("404", "Recurso não encontrado");
+    private final String m400 = "Operação inválida";
+    private final String m401 = "Acesso não autorizado";
+    private final String m404 = "Recurso não encontrado";
 
-    private final Response m500 = getResponse("500", "Erro interno ao realizar operação");
-
+    private final String m500 = "Erro interno ao realizar operação";
 
     @Bean
-    public Docket swagger() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .useDefaultResponseMessages(false)
-                .globalResponses(HttpMethod.GET, Arrays.asList(m200, m400, m404, m500))
-                .globalResponses(HttpMethod.POST, Arrays.asList(m201, m400, m404, m500))
-                .globalResponses(HttpMethod.PUT, Arrays.asList(m200, m204, m400, m404, m500))
-                .globalResponses(HttpMethod.DELETE, Arrays.asList(m204, m400, m401, m404, m500))
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.projeto.hruser"))
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(metaInfo());
+    public OpenApiCustomiser customerGlobalHeaderOpenApiCustomiser() {
+        return openApi -> {
+            openApi.getPaths().values().forEach(pathItem -> pathItem.readOperations().forEach(operation -> {
+                if (!Objects.isNull(pathItem.getPost())) {
+                    operation.getResponses().remove("200");
+                    ApiResponses apiResponses = operation.getResponses();
+                    apiResponses.addApiResponse("201", getResponse(m201));
+                    apiResponses.addApiResponse("400", getResponse(m400));
+                    apiResponses.addApiResponse("500", getResponse(m500));
+                    setContentMediaType(operation);
+                }
+                if(!Objects.isNull(pathItem.getPut())){
+                    ApiResponses apiResponses = operation.getResponses();
+                    apiResponses.addApiResponse("200", getResponse(m200));
+                    apiResponses.addApiResponse("204", getResponse(m204));
+                    apiResponses.addApiResponse("400", getResponse(m400));
+                    apiResponses.addApiResponse("500", getResponse(m500));
+                    setContentMediaType(operation);
+                }
+                if(!Objects.isNull(pathItem.getGet())){
+                    ApiResponses apiResponses = operation.getResponses();
+                    apiResponses.addApiResponse("400", getResponse(m400));
+                    apiResponses.addApiResponse("500", getResponse(m500));
+                    setContentMediaType(operation);
+                }
+                if(!Objects.isNull(pathItem.getDelete())){
+                    ApiResponses apiResponses = operation.getResponses();
+                    apiResponses.addApiResponse("204", getResponse(m204));
+                    apiResponses.addApiResponse("400", getResponse(m400));
+                    apiResponses.addApiResponse("404", getResponse(m404));
+                    apiResponses.addApiResponse("500", getResponse(m500));
+                }
+            }));
+        };
     }
 
-
-    private ApiInfo metaInfo() {
-
-        @SuppressWarnings("rawtypes")
-        ApiInfo apiInfo = new ApiInfo(
-                "API REST hr-user",
-                "API REST hr-user",
-                "1.0",
-                "Terms of Service",
-                new Contact("Leonardo", "https://github.com/leosena21/",
-                        "leeosena21@gmail.com"),
-                "Apache License Version 2.0",
-                "https://www.apache.org/licesen.html",
-                new ArrayList<>()
-        );
-
-        return apiInfo;
+    private void setContentMediaType(Operation operation){
+        operation.getResponses().forEach((s, apiResponse) -> {
+            Content content = apiResponse.getContent();
+            if(!content.isEmpty()){
+                Content newContent = new Content();
+                content.forEach((s1, mediaType) -> {
+                    if(StringUtils.isNotBlank(s1) && !s1.equalsIgnoreCase("application/json")){
+                        newContent.addMediaType("application/json", mediaType);
+                    }
+                    newContent.addMediaType(s1, mediaType);
+                });
+                apiResponse.setContent(newContent);
+            }
+        });
     }
 
-    private Response getResponse(final String code, final String msg){
-        return new ResponseBuilder().code(code).description(msg).build();
+    @Bean
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info().title("hr-user API")
+                        .description("ms hr-user")
+                        .version("v0.0.1")
+                        .license(new License().name("Apache 2.0").url("http://springdoc.org")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("hr-user Wiki Documentation")
+                        .url("https://docs.spring.io"));
+    }
+
+    private ApiResponse getResponse(final String msg){
+        if(msg.equalsIgnoreCase(m201)){
+            return new ApiResponse().description(msg).content(new Content());
+        }
+        return new ApiResponse().description(msg)
+                .content(new Content()
+                        .addMediaType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE, new MediaType()));
     }
 }
