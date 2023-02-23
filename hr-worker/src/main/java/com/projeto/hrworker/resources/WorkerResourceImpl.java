@@ -1,5 +1,6 @@
 package com.projeto.hrworker.resources;
 
+import com.projeto.hrworker.dto.WorkerDailyUpdateInput;
 import com.projeto.hrworker.dto.WorkerNewInput;
 import com.projeto.hrworker.entities.Worker;
 import com.projeto.hrworker.services.WorkerService;
@@ -44,6 +45,22 @@ public class WorkerResourceImpl implements WorkerResource{
                 service.insert(workerDto).getId()
         ).toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @Override
+    @PutMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> update(@RequestBody @Valid WorkerDailyUpdateInput workerUpdateDto) {
+        service.updateDailyIncome(workerUpdateDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.deleteWorker(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

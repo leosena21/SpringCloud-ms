@@ -1,5 +1,6 @@
 package com.projeto.hrworker.services;
 
+import com.projeto.hrworker.dto.WorkerDailyUpdateInput;
 import com.projeto.hrworker.dto.WorkerNewInput;
 import com.projeto.hrworker.entities.Worker;
 import com.projeto.hrworker.repositories.WorkerRepository;
@@ -45,5 +46,15 @@ public class WorkerService {
                         .name(workerDto.getName())
                         .dailyIncome(workerDto.getDailyIncome())
                 .build());
+    }
+
+    public void updateDailyIncome(WorkerDailyUpdateInput workerUpdateDto) {
+        Worker worker = findById(workerUpdateDto.getWorkerId());
+        worker.setDailyIncome(workerUpdateDto.getDailyIncome());
+        repository.save(worker);
+    }
+
+    public void deleteWorker(Long id) {
+        repository.deleteById(id);
     }
 }
