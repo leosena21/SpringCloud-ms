@@ -5,6 +5,7 @@ import com.projeto.hruser.entities.User;
 import com.projeto.hruser.services.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,18 +23,22 @@ public class UserResourceImpl implements UserResource{
 
     @Override
     @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<User> findByEmail(@RequestParam String email){
         return ResponseEntity.ok(service.findByEmail(email));
     }
 
     @Override
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+
     public ResponseEntity<User> findById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
     }
 
     @Override
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> insert(@RequestBody @Valid UserNewInputDTO userDTO) {
         User user = service.insert(userDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()

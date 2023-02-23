@@ -22,7 +22,7 @@ public class ResourceExceptionHandler {
                     description = "Recurso não encontrado",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = StandardError.class))
+                            schema = @Schema(implementation = StandardError.class)
                     ))
     })
     @ExceptionHandler(ObjectNotFoundException.class)
