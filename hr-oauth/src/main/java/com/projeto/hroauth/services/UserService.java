@@ -20,6 +20,7 @@ public class UserService implements UserDetailsService {
             return userFeign.findByEmail(username).getBody();
         }
         catch (Exception e){
+            
             throw new UsernameNotFoundException("Email not found");
         }
 
