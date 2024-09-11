@@ -1,40 +1,45 @@
 package com.projeto.hrworker.resources;
 
+import com.projeto.hrworker.dto.WorkerDailyUpdateInput;
 import com.projeto.hrworker.dto.WorkerNewInput;
 import com.projeto.hrworker.entities.Worker;
-import com.projeto.hrworker.services.WorkerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
-@RestController
-@RequestMapping(value = "/workers")
-public class WorkerResource {
+public interface WorkerResource {
 
-    @Autowired
-    private WorkerService service;
+    @Operation(
+        summary = "Busca todos os workers",
+        method = "GET"
+    )
+    ResponseEntity<List<Worker>> findAll();
 
-    @GetMapping
-    public ResponseEntity<List<Worker>> findAll(){
-        return ResponseEntity.ok(service.findAll());
-    }
+    @Operation(
+            summary = "Busca worker a partid do id",
+            method = "GET"
+    )
+    ResponseEntity<Worker> findById(@PathVariable Long id);
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Worker> findById(@PathVariable Long id){
-        return ResponseEntity.ok(service.findById(id));
-    }
+    @Operation(
+        summary = "Insere worker",
+        method = "POST"
+    )
+    ResponseEntity<Void> insert(@RequestBody @Valid WorkerNewInput workerDto);
 
-    @PostMapping
-    public ResponseEntity<Void> insert(@RequestBody @Valid WorkerNewInput workerDto){
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(
-                service.insert(workerDto).getId()
-        ).toUri();
-        return ResponseEntity.created(uri).build();
-    }
+    @Operation(
+            summary = "Atualiza um worker",
+            method = "PUT"
+    )
+    ResponseEntity<Void> update(@RequestBody @Valid WorkerDailyUpdateInput workerUpdateDto);
 
+    @Operation(
+            summary = "Deleta um worker",
+            method = "DELETE"
+    )
+    ResponseEntity<Void> delete(@PathVariable Long id);
 }

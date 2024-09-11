@@ -1,45 +1,60 @@
 package com.projeto.hrworker.services;
 
+import com.projeto.hrworker.dto.WorkerDailyUpdateInput;
 import com.projeto.hrworker.dto.WorkerNewInput;
 import com.projeto.hrworker.entities.Worker;
 import com.projeto.hrworker.repositories.WorkerRepository;
+import com.projeto.hrworker.services.exceptions.ObjectNotFoundException;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static java.lang.String.format;
 @Slf4j
+@AllArgsConstructor
 @Service
 @RefreshScope
 public class WorkerService {
 
-    @Autowired
     private Environment env;
 
-    @Autowired
     WorkerRepository repository;
 
     public Worker findById(Long id) {
+        log.info(format("Consultando worker id:%s", id));
+
         log.error("PORT = " + env.getProperty("local.server.port"));
         return repository.findById(id)
-                .orElseThrow( () -> new EntityNotFoundException("Worker " + id + " não encontrado"));
+                .orElseThrow( () -> new ObjectNotFoundException(format("Worker id:%s não encontrado", id)));
     }
 
     public List<Worker> findAll() {
+        log.info(format("Preparando para buscar todos os workers"));
         return repository.findAll();
     }
 
     @Transactional
     public Worker insert(WorkerNewInput workerDto) {
+        log.info(format("Preparando para inserir o worker de nome: %s", workerDto.getName()));
         return repository.save(
                 Worker.builder()
                         .name(workerDto.getName())
                         .dailyIncome(workerDto.getDailyIncome())
                 .build());
+    }
+
+    public void updateDailyIncome(WorkerDailyUpdateInput workerUpdateDto) {
+        Worker worker = findById(workerUpdateDto.getWorkerId());
+        worker.setDailyIncome(workerUpdateDto.getDailyIncome());
+        repository.save(worker);
+    }
+
+    public void deleteWorker(Long id) {
+        repository.deleteById(id);
     }
 }
